@@ -84,8 +84,11 @@ function Index() {
           </section>
         </div>
 
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-canvas via-canvas to-transparent pt-10">
-          <PromptComposer country={country} onSubmit={handleSubmit} suggestions={suggestions} />
+        <div className="absolute inset-x-0 bottom-0">
+          <div className="h-10 bg-gradient-to-t from-canvas to-transparent" />
+          <div className="bg-canvas">
+            <PromptComposer country={country} onSubmit={handleSubmit} suggestions={suggestions} />
+          </div>
         </div>
       </main>
     </div>
