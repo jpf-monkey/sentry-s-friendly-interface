@@ -1,24 +1,92 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { EvidenceReport } from "@/components/sentry/evidence-report";
+import { PromptComposer } from "@/components/sentry/prompt-composer";
+import { SentrySidebar } from "@/components/sentry/sentry-sidebar";
+import { SentryTopBar } from "@/components/sentry/sentry-topbar";
+import { investigations as seed } from "@/lib/sentry-data";
+
+const DESCRIPTION =
+  "Consola de investigación de Sentry: pregunta en lenguaje natural y recibe evidencia trazable de rechazos DTE en LATAM.";
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Sentry · Consola de investigación de rechazos DTE" },
+      { name: "description", content: DESCRIPTION },
+      { property: "og:title", content: "Sentry · Consola de investigación de rechazos DTE" },
+      { property: "og:description", content: DESCRIPTION },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
+const suggestions = [
+  "¿Por qué se rechazó el lote de hoy?",
+  "Comparar con un documento sano del mismo emisor",
+  "¿Hubo reintentos automáticos?",
+];
+
 function Index() {
+  const [items, setItems] = useState(seed);
+  const [activeId, setActiveId] = useState(seed[0].id);
+  const [country, setCountry] = useState(seed[0].country);
+  const [env, setEnv] = useState<"SBX" | "PRD">("PRD");
+
+  const active = useMemo(
+    () => items.find((item) => item.id === activeId) ?? items[0],
+    [items, activeId],
+  );
+
+  function handleSubmit(question: string) {
+    const id = `NEW-${items.length + 1}`;
+    setItems((prev) => [
+      {
+        ...prev[0],
+        id,
+        title: question.slice(0, 42),
+        question,
+        country,
+        when: `Ahora · ${env}`,
+      },
+      ...prev,
+    ]);
+    setActiveId(id);
+  }
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
+    <div className="flex h-screen bg-canvas font-sans text-navy">
+      <SentrySidebar
+        investigations={items}
+        activeId={active.id}
+        onSelect={setActiveId}
+        activeCountry={country}
+        onCountry={setCountry}
       />
+
+      <main className="relative flex flex-1 flex-col overflow-hidden">
+        <SentryTopBar env={env} onEnv={setEnv} caseId={active.id} />
+
+        <div className="flex-1 overflow-y-auto pb-48">
+          <section className="mx-auto max-w-4xl space-y-6 px-8 py-10">
+            <div className="flex justify-end">
+              <p className="max-w-xl rounded-xl bg-navy px-4 py-3 text-sm leading-relaxed text-white">
+                {active.question}
+              </p>
+            </div>
+            <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-widest text-navy/40">
+              <span className="size-1.5 rounded-full bg-teal" />
+              Evidencia · {active.country} · {env}
+            </div>
+            <EvidenceReport report={active.report} />
+          </section>
+        </div>
+
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-canvas via-canvas to-transparent pt-10">
+          <PromptComposer country={country} onSubmit={handleSubmit} suggestions={suggestions} />
+        </div>
+      </main>
     </div>
   );
 }
