@@ -5,7 +5,7 @@ import { EvidenceReport } from "@/components/sentry/evidence-report";
 import { PromptComposer } from "@/components/sentry/prompt-composer";
 import { SentrySidebar } from "@/components/sentry/sentry-sidebar";
 import { SentryTopBar } from "@/components/sentry/sentry-topbar";
-import { investigations as seed } from "@/lib/sentry-data";
+import { investigations as seed, type Investigation } from "@/lib/sentry-data";
 
 const DESCRIPTION =
   "Consola de investigación de Sentry: pregunta en lenguaje natural y recibe evidencia trazable de rechazos DTE en LATAM.";
@@ -29,13 +29,14 @@ const suggestions = [
 ];
 
 function Index() {
-  const [items, setItems] = useState(seed);
-  const [activeId, setActiveId] = useState(seed[0].id);
-  const [country, setCountry] = useState(seed[0].country);
+  const first = seed[0] as Investigation;
+  const [items, setItems] = useState<Investigation[]>(seed);
+  const [activeId, setActiveId] = useState(first.id);
+  const [country, setCountry] = useState(first.country);
   const [env, setEnv] = useState<"SBX" | "PRD">("PRD");
 
-  const active = useMemo(
-    () => items.find((item) => item.id === activeId) ?? items[0],
+  const active = useMemo<Investigation>(
+    () => items.find((item) => item.id === activeId) ?? (items[0] as Investigation),
     [items, activeId],
   );
 
@@ -43,7 +44,7 @@ function Index() {
     const id = `NEW-${items.length + 1}`;
     setItems((prev) => [
       {
-        ...prev[0],
+        ...(prev[0] as Investigation),
         id,
         title: question.slice(0, 42),
         question,
