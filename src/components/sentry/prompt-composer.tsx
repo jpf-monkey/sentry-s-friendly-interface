@@ -1,12 +1,12 @@
 import { useState } from "react";
 
 type Props = {
-  country: string;
+  scope: string;
   onSubmit: (question: string) => void;
   suggestions: string[];
 };
 
-export function PromptComposer({ country, onSubmit, suggestions }: Props) {
+export function PromptComposer({ scope, onSubmit, suggestions }: Props) {
   const [value, setValue] = useState("");
 
   function submit() {
@@ -38,8 +38,8 @@ export function PromptComposer({ country, onSubmit, suggestions }: Props) {
       >
         <div className="flex items-center gap-3">
           <div className="flex shrink-0 items-center border-r border-black/5 px-3">
-            <span className="text-xs font-semibold uppercase tracking-tight text-teal">
-              {country}
+            <span className="whitespace-nowrap text-xs font-semibold uppercase tracking-tight text-teal">
+              {scope}
             </span>
           </div>
           <input
