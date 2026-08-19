@@ -1,14 +1,16 @@
-# Welcome to your Lovable project
+# Sentry's Friendly Interface
+
+tengo este AI llamado Sentry, actualmente su diseño es el de la foto con fondo blanco, pero me gustaria generar un nuevo front mas vivo, intente modelarlo como esta la imagene con fondo verde, pero no me convence. Necesito un diseño friendly-user para Sentry, donde se pueda tener un buen promp y pantalla de resultado.
 
 This project was built with [Lovable](https://lovable.dev).
 
 ## Build with Lovable
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/6d77efb8-7ca4-41ac-899b-388a758acccc).
 
 - **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
 
 ## Development
 
@@ -20,10 +22,3 @@ cd <repository-name>
 npm i
 npm run dev
 ```
-
-## Built with
-
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
