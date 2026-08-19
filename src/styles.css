@@ -7,13 +7,20 @@
 @theme {
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --color-navy: oklch(0.245 0.058 259.2);
-  --color-navy-soft: oklch(0.315 0.055 259.2);
-  --color-teal: oklch(0.653 0.101 208.5);
-  --color-teal-bright: oklch(0.746 0.113 199.7);
-  --color-canvas: oklch(0.978 0.004 247.9);
-  --color-warning: oklch(0.762 0.128 74.5);
-  --color-error: oklch(0.629 0.156 33.6);
+  /* Paleta Gosocket */
+  --color-navy: oklch(0.301 0.053 186);
+  --color-navy-soft: oklch(0.381 0.067 186);
+  --color-teal: oklch(0.536 0.1 175.8);
+  --color-teal-bright: oklch(0.726 0.03 174.1);
+  --color-cerulean: oklch(0.523 0.114 237.1);
+  --color-mint: oklch(0.971 0.007 164.9);
+  --color-azure: oklch(0.914 0.01 174.3);
+  --color-canvas: oklch(0.971 0.007 164.9);
+  --color-warning: oklch(0.694 0.172 49.5);
+  --color-linen: oklch(0.959 0.016 58.6);
+  --color-cornsilk: oklch(0.97 0.038 99);
+  --color-graphite: oklch(0.373 0.004 308.4);
+  --color-error: oklch(0.588 0.176 34);
 }
 
 /*
