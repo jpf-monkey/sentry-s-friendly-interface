@@ -6,8 +6,9 @@ type Props = {
   investigations: Investigation[];
   activeId: string;
   onSelect: (id: string) => void;
-  activeCountry: string;
-  onCountry: (country: string) => void;
+  selected: string[];
+  onToggleCountry: (country: string) => void;
+  onSelectAll: () => void;
 };
 
 const dot: Record<string, string> = {
@@ -20,9 +21,12 @@ export function SentrySidebar({
   investigations,
   activeId,
   onSelect,
-  activeCountry,
-  onCountry,
+  selected,
+  onToggleCountry,
+  onSelectAll,
 }: Props) {
+  const allSelected = selected.length === countries.length;
+
   return (
     <aside className="flex w-72 shrink-0 flex-col bg-navy text-white/70">
       <div className="p-6">
@@ -38,21 +42,45 @@ export function SentrySidebar({
 
       <nav className="flex-1 overflow-y-auto px-4">
         <div className="pb-6">
-          <p className="px-2 text-[10px] font-medium uppercase tracking-widest text-white/40">
-            Países
-          </p>
+          <div className="flex items-center justify-between px-2">
+            <p className="text-[10px] font-medium uppercase tracking-widest text-white/40">
+              Países
+            </p>
+            <span className="text-[10px] font-medium text-white/40">
+              {allSelected ? "Todos" : `${selected.length}/${countries.length}`}
+            </span>
+          </div>
           <div className="mt-3 flex flex-wrap gap-1.5 px-2">
+            <button
+              onClick={onSelectAll}
+              aria-pressed={allSelected}
+              className={cn(
+                "rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors",
+                allSelected
+                  ? "bg-teal text-white"
+                  : "bg-white/5 text-white/60 hover:bg-white/10",
+              )}
+            >
+              Todos
+            </button>
             {countries.map((country) => (
               <button
                 key={country}
-                onClick={() => onCountry(country)}
+                onClick={() => onToggleCountry(country)}
+                aria-pressed={selected.includes(country)}
                 className={cn(
-                  "rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors",
-                  country === activeCountry
-                    ? "bg-white/10 text-teal-bright"
+                  "flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors",
+                  selected.includes(country)
+                    ? "bg-white/15 text-teal-bright ring-1 ring-teal-bright/40"
                     : "bg-white/5 text-white/60 hover:bg-white/10",
                 )}
               >
+                <span
+                  className={cn(
+                    "size-1.5 rounded-full",
+                    selected.includes(country) ? "bg-teal-bright" : "bg-white/20",
+                  )}
+                />
                 {country}
               </button>
             ))}
