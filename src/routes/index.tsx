@@ -5,7 +5,11 @@ import { EvidenceReport } from "@/components/sentry/evidence-report";
 import { PromptComposer } from "@/components/sentry/prompt-composer";
 import { SentrySidebar } from "@/components/sentry/sentry-sidebar";
 import { SentryTopBar } from "@/components/sentry/sentry-topbar";
-import { investigations as seed, type Investigation } from "@/lib/sentry-data";
+import {
+  countries as allCountries,
+  investigations as seed,
+  type Investigation,
+} from "@/lib/sentry-data";
 
 const DESCRIPTION =
   "Consola de investigación de Sentry: pregunta en lenguaje natural y recibe evidencia trazable de rechazos DTE en LATAM.";
@@ -32,8 +36,27 @@ function Index() {
   const first = seed[0] as Investigation;
   const [items, setItems] = useState<Investigation[]>(seed);
   const [activeId, setActiveId] = useState(first.id);
-  const [country, setCountry] = useState(first.country);
+  const [selected, setSelected] = useState<string[]>([first.country]);
   const [env, setEnv] = useState<"SBX" | "PRD">("PRD");
+
+  const scope =
+    selected.length === 0
+      ? "Sin países"
+      : selected.length === allCountries.length
+        ? "Todos los países"
+        : selected.length <= 2
+          ? selected.join(" · ")
+          : `${selected.length} países`;
+
+  function toggleCountry(country: string) {
+    setSelected((prev) =>
+      prev.includes(country) ? prev.filter((item) => item !== country) : [...prev, country],
+    );
+  }
+
+  function selectAll() {
+    setSelected((prev) => (prev.length === allCountries.length ? [] : [...allCountries]));
+  }
 
   const active = useMemo<Investigation>(
     () => items.find((item) => item.id === activeId) ?? (items[0] as Investigation),
@@ -48,7 +71,7 @@ function Index() {
         id,
         title: question.slice(0, 42),
         question,
-        country,
+        country: scope,
         when: `Ahora · ${env}`,
       },
       ...prev,
@@ -62,8 +85,9 @@ function Index() {
         investigations={items}
         activeId={active.id}
         onSelect={setActiveId}
-        activeCountry={country}
-        onCountry={setCountry}
+        selected={selected}
+        onToggleCountry={toggleCountry}
+        onSelectAll={selectAll}
       />
 
       <main className="relative flex flex-1 flex-col overflow-hidden">
@@ -87,7 +111,7 @@ function Index() {
         <div className="absolute inset-x-0 bottom-0">
           <div className="h-10 bg-gradient-to-t from-canvas to-transparent" />
           <div className="bg-canvas">
-            <PromptComposer country={country} onSubmit={handleSubmit} suggestions={suggestions} />
+          <PromptComposer scope={scope} onSubmit={handleSubmit} suggestions={suggestions} />
           </div>
         </div>
       </main>
