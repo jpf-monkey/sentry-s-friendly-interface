@@ -5,7 +5,11 @@ import { EvidenceReport } from "@/components/sentry/evidence-report";
 import { PromptComposer } from "@/components/sentry/prompt-composer";
 import { SentrySidebar } from "@/components/sentry/sentry-sidebar";
 import { SentryTopBar } from "@/components/sentry/sentry-topbar";
-import { investigations as seed, type Investigation } from "@/lib/sentry-data";
+import {
+  countries as allCountries,
+  investigations as seed,
+  type Investigation,
+} from "@/lib/sentry-data";
 
 const DESCRIPTION =
   "Consola de investigación de Sentry: pregunta en lenguaje natural y recibe evidencia trazable de rechazos DTE en LATAM.";
